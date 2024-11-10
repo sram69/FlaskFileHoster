@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types -->
+<files>
+    <file>
+        <mimetype>text/plain</mimetype>
+        <name>demo.txt</name>
+        <isPublic>true</isPublic>
+    </file>
+</files>
