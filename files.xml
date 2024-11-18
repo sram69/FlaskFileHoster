@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types -->
+
+<!--
+mimetype: Any mime type, not null
+isPublic: true/false
+password: password to read file, only work if isPublic==true, empty if the file is unlisted
+checksum: true/false, is checksum readable in /checksum
+-->
+
 <files>
     <file>
         <mimetype>text/plain</mimetype>
