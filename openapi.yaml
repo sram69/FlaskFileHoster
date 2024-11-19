@@ -1,0 +1,164 @@
+openapi: 3.1.0
+info:
+  title: Flask File Hoster
+  version: 1.0.0
+  description: |
+    Simple file hoster that run on flask
+
+servers:
+  - url: f.mathiasd.fr
+
+paths:
+  /:
+    get:
+      summary: List public files
+      description: Returns a list of all publicly accessible files
+      operationId: listPublicFiles
+      responses:
+        '200':
+          description: Successful response with list of public files
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  description: Filename of a public file
+
+  /{file}:
+    get:
+      summary: Retrieve a file
+      description: |
+        Retrieves a file, with optional password protection for non-public files
+      operationId: getFile
+      parameters:
+        - name: file
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the file to retrieve
+        - name: pass
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Password for accessing non-public files
+      responses:
+        '200':
+          description: Successfully retrieved file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Forbidden - Invalid or missing password
+        '404':
+          description: File not found
+
+  /{file}/download:
+    get:
+      summary: Download a file
+      description: |
+        Downloads a file, with optional password protection for non-public files
+      operationId: downloadFile
+      parameters:
+        - name: file
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the file to download
+        - name: pass
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Password for accessing non-public files
+      responses:
+        '200':
+          description: Successfully downloaded file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Forbidden - Invalid or missing password
+        '404':
+          description: File not found
+
+  /{file}/checksum:
+    get:
+      summary: Generate file checksums
+      description: |
+        Generates multiple hash checksums for a file if checksum is enabled
+      operationId: generateChecksum
+      parameters:
+        - name: file
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the file to generate checksums for
+      responses:
+        '200':
+          description: Successfully generated checksums
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sha512:
+                    type: string
+                    description: SHA-512 checksum
+                  sha256:
+                    type: string
+                    description: SHA-256 checksum
+                  sha1:
+                    type: string
+                    description: SHA-1 checksum
+                  md5:
+                    type: string
+                    description: MD5 checksum
+        '404':
+          description: File not found
+        '405':
+          description: Checksum generation disabled for this file
+
+  /{file}/qrcode:
+    get:
+      summary: Generate QR code for file download
+      description: |
+        Generates a QR code with a download link for the specified file
+      operationId: generateQRCode
+      parameters:
+        - name: file
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the file to generate QR code for
+      responses:
+        '200':
+          description: Successfully generated QR code
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: File not found
+
+components:
+  schemas: {}
+  securitySchemes:
+    filePassword:
+      type: apiKey
+      in: query
+      name: pass
+      description: Password for accessing non-public files
+
+security:
+  - filePassword: []
