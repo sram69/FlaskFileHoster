@@ -35,6 +35,7 @@ def index():
     return [filename for filename, info in files.items() if info['isPublic']]
 
 @app.route("/<file>/checksum")
+@app.route("/<file>/checksum/")
 def checksum(file):
     files = load_files_config()
 
@@ -68,6 +69,7 @@ def checksum(file):
     }
 
 @app.route("/<file>")
+@app.route("/<file>/")
 def give_file(file):
     files = load_files_config()
    
@@ -98,6 +100,7 @@ def give_file(file):
     )
 
 @app.route("/<file>/download")
+@app.route("/<file>/download/")
 def download_file(file):
     files = load_files_config()
    
