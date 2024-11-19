@@ -97,6 +97,36 @@ def give_file(file):
         mimetype=file_info['mimetype'] if file_info['mimetype'] else None
     )
 
+@app.route("/<file>/download")
+def download_file(file):
+    files = load_files_config()
+   
+    if file not in files:
+        abort(404)
+        return
+   
+    file_info = files[file]
+   
+    if not file_info['isPublic']:
+        if not file_info['password']:
+            abort(500)
+            return
+           
+        password = request.args.get("pass", "")
+        if not password or password != file_info['password']:
+            abort(403)
+            return
+   
+    if not os.path.exists(f"files/{file}"):
+        abort(404)
+        return
+   
+    return send_file(
+        f"files/{file}",
+        download_name=file,
+        mimetype="application/octet-stream"
+    )
+
 @app.route("/<file>/qrcode")
 def generate_qrcode(file):
     files = load_files_config()
